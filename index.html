@@ -3,25 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tik Saver - Made by MD M Nasim</title>
+<title>Tik Saver - By Nasim</title>
 <style>
-:root{--card:#1e1535;--purple:#7c3aed}
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,Hind Siliguri,sans-serif}
-body{background:linear-gradient(180deg,#1a1033 0%,#0f0a1f 100%);color:#fff;min-height:100vh;padding:16px}
-.header{display:flex;justify-content:space-between;align-items:center;max-width:800px;margin:0 auto 20px}
-.logo{display:flex;align-items:center;gap:12px}
-.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800}
-.badge{border:1px solid #4b3a6b;padding:6px 14px;border-radius:20px;font-size:12px;color:#c4b5fd}
-.hero{max-width:800px;margin:0 auto}
-.hero small{color:#a78bfa;letter-spacing:2px;font-size:11px;font-weight:700}
-.hero h2{font-size:32px;line-height:1.2;margin:10px 0}
-.hero h2 span{color:#a78bfa}
-.card{max-width:800px;margin:18px auto;background:rgba(30,21,53,0.9);border:1px solid #2d2250;border-radius:20px;padding:18px}
-.input-row{display:flex;gap:10px}
-.input-row input{flex:1;background:#0f0a1f;border:1px solid #2d2250;border-radius:12px;padding:14px;color:#fff;outline:none}
-.input-row button{background:#2d2250;border:none;color:#fff;padding:0 20px;border-radius:12px;font-weight:700;cursor:pointer}
-.search-btn{width:100%;margin-top:12px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;padding:14px;border-radius:12px;font-weight:700;font-size:16px;cursor:pointer}
-.error{color:#f87171;background:rgba(248,113,113,0.1);padding:12px;border-radius:12px;margin-top:12px;display:none}
-.result{max-width:800px;margin:20px auto;display:none}
-.video-box{background:#1e1535;border-radius:20px;padding:16px;border:1px solid #2d2250}
-.video-box video{width:100%;
+body{background:#120d26;color:#fff;font-family:sans-serif;padding:16px;margin:0}
+.card{background:#1e1535;border-radius:16px;padding:16px;max-width:500px;margin:20px auto;border:1px solid #2d2250}
+input{width:100%;padding:14px;border-radius:10px;border:1px solid #333;background:#0f0a1f;color:#fff;box-sizing:border-box}
+.btn{width:100%;padding:14px;background:#7c3aed;color:#fff;border:none;border-radius:10px;font-weight:700;margin-top:10px}
+video{width:100%;border-radius:12px;margin-top:12px;background:#000}
+.dl{display:block;background:#7c3aed;color:#fff;text-align:center;padding:12px;border-radius:10px;text-decoration:none;margin-top:10px;font-weight:700}
+</style>
+</head>
+<body>
+<div style="text-align:center;padding:20px">
+<h2>Tik Saver</h2>
+<p>Made by MD M Nasim</p>
+</div>
+
+<div class="card">
+<input id="url" placeholder="TikTok link paste korun...">
+<button class="btn" onclick="getVideo()">SEARCH</button>
+<div id="err" style="color:#f55;margin-top:10px;display:none"></div>
+<video id="v" controls style="display:none"></video>
+<a id="d" class="dl" style="display:none" target="_blank">Download - Gallery Save</a>
+<p id="msg" style="display:none;color:#0f0;text-align:center;margin-top:10px">Saved! Gallery > Videos e check korun</p>
+</div>
+
+<script>
+async function getVideo(){
+let u=document.getElementById('url').value.trim();
+let e=document.getElementById('err');
+e.style.display='none';
+if(!u){e.textContent='Link din!';e.style.display='block';return}
+try{
+let r=await fetch('https://www.tikwm.com/api/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:u})});
+let j=await r.json();
+if(j.code!=0)throw new Error('Video pawa jayni');
+let d=j.data;
+let play=d.hdplay||d.play;
+let vp=document.getElementById('v');
+vp.src=play;vp.style.display='block';
+let dl=document.getElementById('d');
+dl.href=play;dl.download='tik-saver-'+Date.now()+'.mp4';dl.style.display='block';
+dl.onclick=()=>{setTimeout(()=>{document.getElementById('msg').style.display='block'},500);window.open('https://asiafilm.org/4/0a5f0267676c397e134ebde5a808e1df','_blank')}
+}catch(err){e.textContent=err.message;e.style.display='block'}
+}
+</script>
+</body>
+</html>
